@@ -124,7 +124,43 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       {
         type: "add",
         path: "packages/{{ name }}/tsconfig.json",
-        templateFile: "templates/tsconfig.json.app.hbs",
+        templateFile: "templates/tsconfig.app.json.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/{{ name }}/next.config.mjs",
+        templateFile: "templates/next.config.mjs.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/{{ name }}/src/app/page.tsx",
+        templateFile: "templates/app/page.tsx.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/{{ name }}/src/app/layout.tsx",
+        templateFile: "templates/app/layout.tsx.hbs",
+      },
+      {
+        type: "add",
+        path: "packages/{{ name }}/.gitignore",
+        templateFile: "templates/app/.gitignore.app.hbs",
+      },
+      async (answers) => {
+        /**
+         * Install deps and format everything
+         */
+        if ("name" in answers && typeof answers.name === "string") {
+          // execSync("pnpm dlx sherif@latest --fix", {
+          //   stdio: "inherit",
+          // });
+          execSync("pnpm i", { stdio: "inherit" });
+          execSync(
+            `pnpm prettier --write packages/${answers.name}/** --list-different`
+          );
+          return "Package scaffolded";
+        }
+        return "Package not scaffolded";
       },
     ],
   });
